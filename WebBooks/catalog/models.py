@@ -18,8 +18,8 @@ class Genre(models.Model):
 class Language(models.Model):
     """Справочник языков"""
     name = models.CharField(max_length=20,
-                            help_text='Введите жанр книги',
-                            verbose_name='Жанр книги')
+                            help_text='Введите язык книги',
+                            verbose_name='Язык книги')
 
     def __str__(self):
         """Возвращает язык книги"""
@@ -75,6 +75,14 @@ class Book(models.Model):
     def get_absolute_url(self):
         """Возвращает URL-адрес для доступа к определенному экземпляру книги"""
         return reverse('book-detail', args=[str(self.id)])
+
+    def display_author(self):
+        """для получения строкового представления информации об авторах"""
+        return ', '.join([author.last_name for author in
+                          self.author.all()])
+
+    # заголовок поля с авторами
+    display_author.short_description = 'Авторы!'
 
 
 class Status(models.Model):
