@@ -9,6 +9,11 @@ class BookListView(generic.ListView):
     model = Book
 
 
+class BookDetailView(generic.DetailView):
+    """Класс для обображения информации о конкретной книге"""
+    model = Book
+
+
 # Create your views here.
 def index(request):
     """Генерация количеств некоторых объектов"""
