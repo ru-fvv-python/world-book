@@ -1,10 +1,15 @@
 from django.shortcuts import render
+from django.views import generic
 
 from .models import Book, Author, BookInstance
 
 
-# Create your views here.
+class BookListView(generic.ListView):
+    """обобщенный класс для отображения списка книг"""
+    model = Book
 
+
+# Create your views here.
 def index(request):
     """Генерация количеств некоторых объектов"""
     num_books = Book.objects.all().count()
