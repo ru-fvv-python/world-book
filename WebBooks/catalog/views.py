@@ -15,6 +15,12 @@ class BookDetailView(generic.DetailView):
     model = Book
 
 
+class AuthorListView(generic.ListView):
+    """обощенный класс для вывода списка авторов"""
+    model = Author
+    paginate_by = 4
+
+
 # Create your views here.
 def index(request):
     """Генерация количеств некоторых объектов"""
