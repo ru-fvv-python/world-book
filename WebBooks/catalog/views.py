@@ -7,6 +7,7 @@ from .models import Book, Author, BookInstance
 class BookListView(generic.ListView):
     """обобщенный класс для отображения списка книг"""
     model = Book
+    paginate_by = 3
 
 
 class BookDetailView(generic.DetailView):
