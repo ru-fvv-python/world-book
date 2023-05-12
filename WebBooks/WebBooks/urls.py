@@ -16,7 +16,7 @@ Including another URLconf
 
 from catalog import views
 from django.contrib import admin
-from django.urls import path, re_path
+from django.urls import path, re_path, include
 
 urlpatterns = [
     path('', views.index, name='index'),
@@ -25,4 +25,9 @@ urlpatterns = [
     re_path(r'^book/(?P<pk>\d+)$', views.BookDetailView.as_view(),
             name='book-detail'),
     re_path(r'^authors/$', views.AuthorListView.as_view(), name='authors'),
+]
+
+# Добавление URL-адреса для входа в систему
+urlpatterns += [
+    path('accounts/', include('django.contrib.auth.urls')),
 ]
