@@ -1,8 +1,11 @@
-from django.db import models
+from datetime import date
 
-# Create your models here.
+from django.contrib.auth.models import User
+from django.db import models
 from django.urls import reverse
 
+
+# Create your models here.
 
 class Genre(models.Model):
     """Представляет собой список с жанрами книг"""
@@ -113,7 +116,18 @@ class BookInstance(models.Model):
     due_back = models.DateField(null=True, blank=True,
                                 help_text='Введите конец срока статуса',
                                 verbose_name='Дата окончания статуса')
+    borrower = models.ForeignKey(User, on_delete=models.SET_NULL, null=True,
+                                 blank=True, verbose_name='Заказчик',
+                                 help_text='Выберите заказчика книги')
 
     def __str__(self):
-        """Представляет объект Istance"""
-        return '%s %s %s' % (self.inv_nom, self.book, self.status)
+        """Представляет объект Instance"""
+        return '%s %s %s %s' % (
+            self.inv_nom, self.book, self.status, self.due_back)
+
+    @property
+    def is_overdue(self):
+        """Показывает просрочен ли конкретный экземпляр книги"""
+        if self.due_back and date.today() > self.due_back:
+            return True
+        return False
