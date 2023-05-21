@@ -1,7 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render
 from django.views import generic
 
+from .forms import AuthorsForm
 from .models import Book, Author, BookInstance
 
 
@@ -60,3 +62,50 @@ class LoanedBooksByUserListView(LoginRequiredMixin, generic.ListView):
     def get_queryset(self):
         return BookInstance.objects.filter(borrower=self.request.user).filter(
             status__exact='2').order_by('due_back')
+
+
+def authors_add(request):
+    """получение данных из бд и загрузка шаблона authors_add.html"""
+    author = Author.objects.all()
+    authorsform = AuthorsForm()
+    return render(request, 'catalog/authors_add.html',
+                  {'form': authorsform, 'author': author})
+
+
+def create(request):
+    """Сохранение данных об авторах в БД"""
+
+    if request.method == 'POST':
+        author = Author()
+        author.first_name = request.POST.get('first_name')
+        author.last_name = request.POST.get('last_name')
+        author.date_of_birth = request.POST.get('date_of_birth')
+        author.date_of_death = request.POST.get('date_of_death')
+        author.save()
+        return HttpResponseRedirect('/authors_add/')
+
+
+def delete(request, id):
+    """Удаление авторов из БД"""
+    try:
+        author = Author.objects.get(id=id)
+        author.delete()
+        return HttpResponseRedirect('/authors_add/')
+    except Author.DoesNotExist:
+        return HttpResponseNotFound('<h2>Автор не найден</h2>')
+
+
+def edit_1(request, id):
+    """Изменение данных в БД"""
+    author = Author.objects.get(id=id)
+
+    if request.method == 'POST':
+        author.first_name = request.POST.get('first_name')
+        author.last_name = request.POST.get('last_name')
+        author.date_of_birth = request.POST.get('date_of_birth')
+        author.date_of_death = request.POST.get('date_of_death')
+        author.save()
+        return HttpResponseRedirect('/authors_add/')
+    else:
+        return render(request, 'catalog/edit_1.html',
+                      {'author': author})
