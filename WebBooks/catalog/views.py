@@ -1,7 +1,9 @@
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.http import HttpResponseRedirect, HttpResponseNotFound
 from django.shortcuts import render
+from django.urls import reverse_lazy
 from django.views import generic
+from django.views.generic import CreateView, UpdateView, DeleteView
 
 from .forms import AuthorsForm
 from .models import Book, Author, BookInstance
@@ -109,3 +111,23 @@ def edit_1(request, id):
     else:
         return render(request, 'catalog/edit_1.html',
                       {'author': author})
+
+
+class BookCreate(CreateView):
+    """Класс для создания книг"""
+    model = Book
+    fields = '__all__'
+    success_url = reverse_lazy('books')
+
+
+class BookUpdate(UpdateView):
+    """Класс для редактирования книг"""
+    model = Book
+    fields = '__all__'
+    success_url = reverse_lazy('books')
+
+
+class BookDelete(DeleteView):
+    """Класс для удаления книг"""
+    model = Book
+    success_url = reverse_lazy('books')

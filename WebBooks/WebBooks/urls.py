@@ -28,6 +28,12 @@ urlpatterns = [
     re_path(r'^books/$', views.BookListView.as_view(), name='books'),
     re_path(r'^book/(?P<pk>\d+)$', views.BookDetailView.as_view(),
             name='book-detail'),
+    re_path(r'^book/create/$', views.BookCreate.as_view(),
+            name='book_create'),
+    re_path(r'^book/update/(?P<pk>\d+)$', views.BookUpdate.as_view(),
+            name='book_update'),
+    re_path(r'^book/delete/(?P<pk>\d+)$', views.BookDelete.as_view(),
+            name='book_delete'),
     re_path(r'^authors/$', views.AuthorListView.as_view(), name='authors'),
 ]
 
@@ -36,6 +42,8 @@ urlpatterns += [
     path('accounts/', include('django.contrib.auth.urls')),
 ]
 
+# Добавление URL-адреса для отображения списка книг,
+# находящихся в заказе у текущего пользователя"
 urlpatterns += [
     re_path(r'^mybooks/$', views.LoanedBooksByUserListView.as_view(),
             name='my-borrowed'),
