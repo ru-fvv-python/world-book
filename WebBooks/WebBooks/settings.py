@@ -10,6 +10,7 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/4.1/ref/settings/
 """
 import os
+import dj_database_url
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -20,10 +21,13 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/4.1/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-dzdl%zlxmim+0d0d)&0-)!a#yeq5*@o#=w-$!2)dng9%m3noj*'
+# SECRET_KEY = 'django-insecure-dzdl%zlxmim+0d0d)&0-)!a#yeq5*@o#=w-$!2)dng9%m3noj*'
+SECRET_KEY = os.environ.get('DJANGO_SECRET_KEY',
+                            'm�j9tax! laЭ�l 8оЬt2_+QЭ�) 5%a;jбyjpkaq')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# DEBUG = True
+DEBUG = bool(os.environ.get('DJANGO_DEBUG', True))
 
 ALLOWED_HOSTS = []
 
@@ -42,6 +46,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -125,3 +130,18 @@ STATICFILES_DIRS = [os.path.join(BASE_DIR, 'catalog/static')]
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 LOGIN_REDIRECT_URL = '/'
 EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+
+# Heroku: Обновление конфигурации базы данных из $DATAВASE_URL.
+
+dЬ_from_env = dj_database_url.config(conn_max_age=500)
+DATABASES['default'].update(dЬ_from_env)
+
+# Статичные файлы (CSS, JavaScript, Images)
+# https://docs. djangoproject. com/en/1.10/howto/static-files/437
+# Абсолютный путь к каталогу, в котором collectstatic
+# будет собирать статические файлы для развертывания.
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+
+# Упрощенная обработка статических файлов.
+# https://warehouse.python.org/project/whitenoise/
+STATICFILE_STORAGE = 'whitenoise.storage.CompresseclМanifestStaticFilesStorage'
